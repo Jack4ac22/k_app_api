@@ -14,10 +14,10 @@ Base = declarative_base()
 class DbUser(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, nullable=False, index=True)
+    username = Column(String, nullable=False, index=True, unique=True)
     password = Column(String, nullable=False)
     secret_password = Column(String, nullable=False)
-    email = Column(String, nullable=False)
+    email = Column(String, nullable=False, index=True, unique=True)
     created_at = Column(TIMESTAMP(timezone=True),
                         server_default=text('now()'), nullable=False)
 
@@ -34,5 +34,5 @@ class DbPerson(Base):
                         server_default=text('now()'), nullable=False)
     updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(),
                         onupdate=func.current_timestamp(), nullable=True)
-    # TODO: forign kwy related to user....
-    added_by = Column(Integer, nullable=False)
+    added_by = Column(Integer, ForeignKey("user.id"))
+    user = relationship("DbUser")
