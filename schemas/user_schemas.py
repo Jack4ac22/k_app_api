@@ -1,6 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import Optional, Union
 import enum
 from schemas import personalized_enums
 
@@ -16,7 +16,7 @@ class UserDisplay(BaseModel):
     id: int
     username: str = "username"
     email: EmailStr
-    created_at: datetime
+    created_at: Union[datetime, None]  # verify Union
 
     class Config:
         orm_mode = True
