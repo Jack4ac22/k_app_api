@@ -1,9 +1,18 @@
 from datetime import datetime, date, time
 from pydantic import BaseModel, EmailStr
-from schemas import personalized_enums
+from schemas import personalized_enums, phone_schemas
+from typing import List, Union
 from typing import Optional
 import enum
-from typing import List
+
+
+class PhoneInPerson(BaseModel):
+    id: int
+    phone: str = "+352671536358"
+    description: str = "personal"
+
+    class Config:
+        orm_mode = True
 
 
 class PersonBase(BaseModel):
@@ -23,7 +32,8 @@ class PersonDisplay(PersonBase):
     email: EmailStr = "J_Doe@gmail.com"
     birthday: date
     created_at: datetime
-    updated_at: datetime
+    updated_at: Union[datetime, None]
+    phones: Union[List[PhoneInPerson], None]
 
     class Config:
         orm_mode = True

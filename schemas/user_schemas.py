@@ -16,7 +16,7 @@ class UserDisplay(BaseModel):
     id: int
     username: str = "username"
     email: EmailStr
-    created_at: Union[datetime, None]  # verify Union
+    created_at: datetime
 
     class Config:
         orm_mode = True

@@ -1,12 +1,12 @@
+from schemas import personalized_enums
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Enum, Float, Date, DateTime, TEXT
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 import enum
-from schemas import personalized_enums
-from sqlalchemy.sql import func
-from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
@@ -32,7 +32,7 @@ class DbPerson(Base):
     birthday = Column(Date, nullable=True, server_default="1900-01-31")
     created_at = Column(TIMESTAMP(timezone=True),
                         server_default=text('now()'), nullable=False)
-    updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(),
+    updated_at = Column(TIMESTAMP(timezone=True),
                         onupdate=func.current_timestamp(), nullable=True)
     added_by = Column(Integer, ForeignKey(
         "user.id", ondelete="CASCADE"), nullable=False)
