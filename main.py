@@ -1,11 +1,12 @@
 from fastapi import FastAPI
 from db import models
 from db.database import database_engine
-from routers import user, person, image
+from routers import user, person, image, phone
 
 app = FastAPI()
 app.include_router(user.router)
 app.include_router(person.router)
+app.include_router(phone.router)
 app.include_router(image.router)
 
 

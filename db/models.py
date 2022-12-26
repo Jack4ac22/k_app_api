@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Enum, Float, Date, DateTime,TEXT
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Enum, Float, Date, DateTime, TEXT
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
@@ -34,19 +34,22 @@ class DbPerson(Base):
                         server_default=text('now()'), nullable=False)
     updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(),
                         onupdate=func.current_timestamp(), nullable=True)
-    added_by = Column(Integer, ForeignKey("user.id"))
+    added_by = Column(Integer, ForeignKey(
+        "user.id", ondelete="CASCADE"), nullable=False)
     user = relationship("DbUser")
     phones = relationship("DbPhone", back_populates='person')
-
+    comments = relationship("DbComment", back_populates='person')
+    tasks = relationship("DbTask", back_populates='person')
 
 
 class DbPhone(Base):
     __tablename__ = 'phone'
     id = Column(Integer, primary_key=True, index=True)
-    person_id = Column(Integer, ForeignKey("person.id"))
+    person_id = Column(Integer, ForeignKey(
+        "person.id", ondelete="CASCADE"), nullable=False)
     phone = Column(String, nullable=False, unique=True, index=True)
     description = Column(String, nullable=False,
-                         unique=True, server_default="personal")
+                         server_default="personal")
     created_at = Column(TIMESTAMP(timezone=True),
                         server_default=text('now()'), nullable=False)
     updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(),
@@ -57,7 +60,8 @@ class DbPhone(Base):
 class DbComment(Base):
     __tablename__ = 'comment'
     id = Column(Integer, primary_key=True, index=True)
-    person_id = Column(Integer, ForeignKey("person.id"))
+    person_id = Column(Integer, ForeignKey(
+        "person.id", ondelete="CASCADE"), nullable=False)
     title = Column(String, nullable=True, unique=False)
     content = Column(TEXT, nullable=True,
                      unique=False)
@@ -65,4 +69,19 @@ class DbComment(Base):
                         server_default=text('now()'), nullable=False)
     updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(),
                         onupdate=func.current_timestamp(), nullable=True)
-    person = relationship("DbPerson")
+    person = relationship("DbPerson", back_populates='comments')
+
+
+class DbTask(Base):
+    __tablename__ = 'tasks'
+    id = Column(Integer, primary_key=True, index=True)
+    person_id = Column(Integer, ForeignKey(
+        "person.id", ondelete="CASCADE"), nullable=False)
+    title = Column(String, nullable=True, unique=False)
+    content = Column(TEXT, nullable=True,
+                     unique=False)
+    created_at = Column(TIMESTAMP(timezone=True),
+                        server_default=text('now()'), nullable=False)
+    updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(),
+                        onupdate=func.current_timestamp(), nullable=True)
+    person = relationship("DbPerson", back_populates='tasks')

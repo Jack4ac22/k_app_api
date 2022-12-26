@@ -5,7 +5,6 @@ from sqlalchemy.orm.session import Session
 from db import db_person
 from typing import List
 
-from fastapi import APIRouter
 router = APIRouter(
     prefix="/person",
     tags=["person"]
