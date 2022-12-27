@@ -37,3 +37,16 @@ class PersonDisplay(PersonBase):
 
     class Config:
         orm_mode = True
+
+
+class PersonDisplaySimple(PersonBase):
+    id: int
+    first_name: str = "John"
+    last_name: str = "Doe"
+    gender: enum.Enum
+    email: EmailStr = "J_Doe@gmail.com"
+    birthday: date
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
