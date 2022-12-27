@@ -5,6 +5,7 @@ from sqlalchemy.orm.session import Session
 from db import db_person
 from typing import List
 from pydantic import EmailStr
+from utilities import jwt_manager
 
 router = APIRouter(
     prefix="/person",
@@ -13,8 +14,9 @@ router = APIRouter(
 
 
 @router.post("", response_model=person_schemas.PersonDisplaySimple, status_code=status.HTTP_201_CREATED)
-def create_new_person(request: person_schemas.PersonBase, db: Session = Depends(get_db)):
-    return db_person.create_person(request, db)
+def create_new_person(request: person_schemas.PersonBase, db: Session = Depends(get_db), user_id: int = Depends(jwt_manager.decode_token)):
+    print(user_id)
+    return db_person.create_person(request, db, user_id)
 
 
 @router.get("/all", response_model=List[person_schemas.PersonDisplay])

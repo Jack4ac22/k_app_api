@@ -25,15 +25,15 @@ def check_id(id: int, db: Session):
         )
 
 
-def create_person(request: person_schemas.PersonBase, db: Session):
-
+def create_person(request: person_schemas.PersonBase, db: Session, user_id: int):
+    check_email_used(request.email, db)
     new_person = DbPerson(
         first_name=request.first_name,
         last_name=request.last_name,
         gender=request.gender,
         email=request.email,
         birthday=request.birthday,
-        added_by=request.added_by,
+        added_by=user_id,
         created_at=datetime.datetime.now()
     )
     db.add(new_person)

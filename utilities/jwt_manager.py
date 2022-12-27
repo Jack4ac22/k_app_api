@@ -2,6 +2,7 @@ from jose import jwt, JWTError
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from config import settings
+from schemas.other_schemas import Token
 
 
 SERVER_KEY = settings.secret_key

@@ -21,10 +21,9 @@ class PersonBase(BaseModel):
     gender: personalized_enums.Genders_person
     email: EmailStr = "J_Doe@gmail.com"
     birthday: date = "1900-12-31"
-    added_by: int = 1
 
 
-class PersonDisplay(PersonBase):
+class PersonDisplay(BaseModel):
     id: int
     first_name: str = "John"
     last_name: str = "Doe"
@@ -33,6 +32,7 @@ class PersonDisplay(PersonBase):
     birthday: date
     created_at: datetime
     updated_at: Union[datetime, None]
+    added_by: int
     phones: Union[List[PhoneInPerson], None]
 
     class Config:
