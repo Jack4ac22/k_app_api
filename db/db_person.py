@@ -17,12 +17,13 @@ def check_email_used(email: str, db: Session):
 
 
 def check_id(id: int, db: Session):
-    result_query = db.query(DbPerson).filter(DbPerson.id == id).first()
-    if not result_query:
+    result_query = db.query(DbPerson).filter(DbPerson.id == id)
+    if not result_query.first():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"No corresponding person was found with ID: {id}, please verify the ID and try again."
         )
+    return result_query
 
 
 def create_person(request: person_schemas.PersonBase, db: Session, user_id: int):
@@ -53,8 +54,7 @@ def get_all(db: Session):
 
 
 def get_by_id(id: int, db: Session):
-    targeted_person = db.query(DbPerson).filter(DbPerson.id == id).first()
-    check_id(id, db)
+    targeted_person = check_id(id, db).first()
     return targeted_person
 
 
@@ -86,16 +86,14 @@ def update(id: int, request: person_schemas.PersonBase, db: Session):
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail=f"The email: {updated_email} is used by someone else in your database, please verify."
             )
-    print(updated_email)
-    print(original_email)
     targeted_person.update(request.dict())
     db.commit()
     return targeted_person.first()
 
 
 def delete_by_id(id: int, db: Session):
-    check_id(id, db)
-    targeted_person = db.query(DbPerson).filter(DbPerson.id == id)
+
+    targeted_person = check_id(id, db)
     deleted_data = targeted_person.first()
     targeted_person.delete()
     db.commit()

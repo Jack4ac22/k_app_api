@@ -30,3 +30,12 @@ class PhoneDisplay(PhoneBase):
 
     class Config:
         orm_mode = True
+
+
+class PhoneDisplaySimple(PhoneBase):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True

@@ -20,25 +20,25 @@ def create_new_person(request: person_schemas.PersonBase, db: Session = Depends(
 
 
 @router.get("/all", response_model=List[person_schemas.PersonDisplay])
-def get_all_persons(db: Session = Depends(get_db)):
+def get_all_persons(db: Session = Depends(get_db), user_id: int = Depends(jwt_manager.decode_token)):
     return db_person.get_all(db)
 
 
 @router.get("/id{id}", response_model=person_schemas.PersonDisplay)
-def get_person_by_id(id: int, db: Session = Depends(get_db)):
+def get_person_by_id(id: int, db: Session = Depends(get_db), user_id: int = Depends(jwt_manager.decode_token)):
     return db_person.get_by_id(id, db)
 
 
 @router.get("/email{email}", response_model=person_schemas.PersonDisplay)
-def get_person_by_id(email: EmailStr, db: Session = Depends(get_db)):
+def get_person_by_id(email: EmailStr, db: Session = Depends(get_db), user_id: int = Depends(jwt_manager.decode_token)):
     return db_person.get_by_email(email, db)
 
 
 @router.put("{id}", response_model=person_schemas.PersonDisplay)
-def update_person(id: int, request: person_schemas.PersonBase, db: Session = Depends(get_db)):
+def update_person(id: int, request: person_schemas.PersonBase, db: Session = Depends(get_db), user_id: int = Depends(jwt_manager.decode_token)):
     return db_person.update(id, request, db)
 
 
 @router.delete("/{id]", response_model=person_schemas.PersonDisplaySimple)
-def delete_person(id: int, db: Session = Depends(get_db)):
+def delete_person(id: int, db: Session = Depends(get_db), user_id: int = Depends(jwt_manager.decode_token)):
     return db_person.delete_by_id(id, db)
