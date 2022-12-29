@@ -63,11 +63,10 @@ class DbComment(Base):
     person_id = Column(Integer, ForeignKey(
         "person.id", ondelete="CASCADE"), nullable=False)
     title = Column(String, nullable=True, unique=False)
-    content = Column(TEXT, nullable=True,
-                     unique=False)
+    content = Column(TEXT, nullable=True, unique=False)
     created_at = Column(TIMESTAMP(timezone=True),
                         server_default=text('now()'), nullable=False)
-    updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(),
+    updated_at = Column(TIMESTAMP(timezone=True),
                         onupdate=func.current_timestamp(), nullable=True)
     person = relationship("DbPerson", back_populates='comments')
 
