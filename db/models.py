@@ -1,7 +1,6 @@
 from schemas import personalized_enums
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Enum, Float, Date, DateTime, TEXT
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.sql.expression import text
@@ -79,7 +78,7 @@ class DbTask(Base):
     title = Column(String, nullable=True)
     content = Column(TEXT, nullable=True)
     task_status = Column(Enum(personalized_enums.Task_status),
-                         nullable=False)
+                         nullable=False, server_default="task_open")
     created_at = Column(TIMESTAMP(timezone=True),
                         server_default=text('now()'), nullable=False)
     updated_at = Column(TIMESTAMP(timezone=True),
