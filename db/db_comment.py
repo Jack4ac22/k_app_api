@@ -55,3 +55,11 @@ def update(id: int, request: comment_schemas.CommentBase, db: Session):
     targeted_comment.update(request.dict())
     db.commit()
     return targeted_comment.first()
+
+
+def delete(id: int, db: Session):
+    targeted_comment = check_comment_id(id, db)
+    deleted_comment = targeted_comment.first()
+    targeted_comment.delete()
+    db.commit()
+    return deleted_comment

@@ -83,7 +83,6 @@ def update(id: int, request: phone_schemas.PhoneBase, db: Session):
 def delete_by_id(id: int, db: Session):
     targeted_phone = check_id(id, db)
     deleted_phone = targeted_phone.first()
-    print(deleted_phone)
     targeted_phone.delete()
     db.commit()
     return deleted_phone
