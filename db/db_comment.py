@@ -16,9 +16,9 @@ def check_comment_id(id: int, db: Session):
 
 
 def create_comment(request: comment_schemas.CommentBase, db: Session):
-    db_check_methods.check_person_id(request.persn_id, db)
+    db_check_methods.check_person_id(request.person_id, db)
     new_comment = DbComment(
-        person_id=request.persn_id,
+        person_id=request.person_id,
         title=request.title,
         content=request.content
     )
@@ -48,3 +48,10 @@ def get_personal_comments(person_id: int, db: Session):
             detail=f"No corresponding comments were found for the person of ID: {person_id}, please verify and try again."
         )
     return comments
+
+
+def update(id: int, request: comment_schemas.CommentBase, db: Session):
+    targeted_comment = check_comment_id(id, db)
+    targeted_comment.update(request.dict())
+    db.commit()
+    return targeted_comment.first()

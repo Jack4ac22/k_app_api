@@ -16,7 +16,7 @@ class PersonInComments(BaseModel):
 
 
 class CommentBase(BaseModel):
-    persn_id: int = 1
+    person_id: int = 1
     title: str = "comment title"
     content: str = "comment content"
 

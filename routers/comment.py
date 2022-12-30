@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 
-@router.post("", response_model=comment_schemas.CommentDisplay)
+@router.post("", response_model=comment_schemas.CommentDisplay, status_code=status.HTTP_201_CREATED)
 def create_new_comment(request: comment_schemas.CommentBase, db: Session = Depends(get_db)):
     return db_comment.create_comment(request, db)
 
@@ -27,6 +27,12 @@ def get_single_comment_by_id(id: int, db: Session = Depends(get_db)):
     return db_comment.get_comment_by_id(id, db)
 
 
-@router.get("per{person_id}")
+@router.get("per{person_id}", response_model=List[comment_schemas.CommentDisplaySimple])
 def get_all_comments_for_person(person_id: int, db: Session = Depends(get_db)):
     return db_comment.get_personal_comments(person_id, db)
+
+
+@router.put("", response_model=comment_schemas.CommentDisplay)
+def update_comment(id: int, request: comment_schemas.CommentBase, db: Session = Depends(get_db)):
+    return db_comment.update(id, request, db)
+
