@@ -15,7 +15,7 @@ router = APIRouter(
 
 @router.post("", response_model=person_schemas.PersonDisplaySimple, status_code=status.HTTP_201_CREATED)
 def create_new_person(request: person_schemas.PersonBase, db: Session = Depends(get_db), user_id: int = Depends(jwt_manager.decode_token)):
-    print(user_id)
+    # print(user_id)
     return db_person.create_person(request, db, user_id)
 
 
