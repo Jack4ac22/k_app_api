@@ -41,3 +41,23 @@ class PersonTitleDisplay(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class PersonTitleDisplayInTitle(BaseModel):
+    id: int
+    created_at: datetime
+    update_at: Union[datetime, None]
+    person: PersonInPT
+
+    class Config:
+        orm_mode = True
+
+
+class PersonTitleDisplayInPerson(BaseModel):
+    id: int
+    created_at: datetime
+    update_at: Union[datetime, None]
+    job_title: TitleInPT
+
+    class Config:
+        orm_mode = True

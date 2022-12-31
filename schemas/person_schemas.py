@@ -1,6 +1,6 @@
 from datetime import datetime, date, time
 from pydantic import BaseModel, EmailStr
-from schemas import personalized_enums, phone_schemas
+from schemas import personalized_enums, person_job_title_schemas
 from typing import List, Union
 from typing import Optional
 import enum
@@ -55,6 +55,7 @@ class PersonDisplay(BaseModel):
     phones: Union[List[PhoneInPerson], None]
     comments: Union[List[CommentInPerson], None]
     tasks: Union[List[TaskInPerson], None]
+    job_titles:Union[List[person_job_title_schemas.PersonTitleDisplayInPerson],None]
 
     class Config:
         orm_mode = True

@@ -7,11 +7,11 @@ from db import db_check_methods
 
 def check_title_duplication(user_id: int, job_title: str, db: Session):
     targeted_job_title = db.query(DbJobTitle).filter(
-        DbJobTitle.title == job_title).filter(DbJobTitle.added_by == user_id)
+        DbJobTitle.title == job_title)
     if targeted_job_title.first():
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=f"The job title: '{job_title}' is used by someone else in your database, please verify."
+            detail=f"The job title: '{job_title}' is already used, please verify."
         )
     return targeted_job_title
 
@@ -29,7 +29,6 @@ def check_job_title_id(id: int, db: Session):
 def create_job_title(request: job_title_schemas.JobTitleBase, db: Session, user_id: int):
     check_title_duplication(user_id, request.title, db)
     new_job_title = DbJobTitle(
-        added_by=user_id,
         title=request.title,
         description=request.description
     )
@@ -44,16 +43,20 @@ def get_all(db: Session):
     return db.query(DbJobTitle).all()
 
 
-def get_all_user(user_id, db):
-    job_titles = db.query(DbJobTitle).filter(
-        DbJobTitle.added_by == user_id).all()
-    if not job_titles:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"No corresponding job titles were found for your account - ID: {user_id}, please verify and try again or create your own job titles."
-        )
-    return job_titles
-
-
 def get_one_by_id(id: int, db: Session):
     return check_job_title_id(id, db).first()
+
+
+def update(id: int, request: job_title_schemas.JobTitleBase, db: Session):
+    targeted_job_title = check_job_title_id(id, db)
+    targeted_job_title.update(request.dict())
+    db.commit()
+    return targeted_job_title.first()
+
+
+def delete(id: int, db: Session):
+    targeted_job_title = check_job_title_id(id, db)
+    deleted_job_title = targeted_job_title.first()
+    targeted_job_title.delete()
+    db.commit()
+    return deleted_job_title
