@@ -19,6 +19,7 @@ class DbUser(Base):
     email = Column(String, nullable=False, index=True, unique=True)
     created_at = Column(TIMESTAMP(timezone=True),
                         server_default=text('now()'), nullable=False)
+    
 
 
 class DbPerson(Base):
@@ -39,6 +40,7 @@ class DbPerson(Base):
     phones = relationship("DbPhone", back_populates='person')
     comments = relationship("DbComment", back_populates='person')
     tasks = relationship("DbTask", back_populates='person')
+    job_titles = relationship("DbPersonJob",back_populates="person")
 
 
 class DbPhone(Base):
@@ -54,6 +56,7 @@ class DbPhone(Base):
     updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(),
                         onupdate=func.current_timestamp(), nullable=True)
     person = relationship("DbPerson", back_populates='phones')
+    #TODO: added_by = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
 
 
 class DbComment(Base):
@@ -68,6 +71,7 @@ class DbComment(Base):
     updated_at = Column(TIMESTAMP(timezone=True),
                         onupdate=text('now()'), nullable=True)
     person = relationship("DbPerson", back_populates='comments')
+    #TODO: added_by = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
 
 
 class DbTask(Base):
@@ -84,3 +88,33 @@ class DbTask(Base):
     updated_at = Column(TIMESTAMP(timezone=True),
                         onupdate=func.current_timestamp(), nullable=True)
     person = relationship("DbPerson", back_populates='tasks')
+    #TODO: added_by = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
+
+
+class DbJobTitle(Base):
+    __tablename__= 'job_title'
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False)
+    description = Column(String, nullable=True)
+    created_at = Column(TIMESTAMP(timezone=True),
+                        server_default=text('now()'), nullable=False)
+    updated_at = Column(TIMESTAMP(timezone=True),
+                        onupdate=func.current_timestamp(), nullable=True)
+    added_by = Column(Integer, ForeignKey(
+        "user.id", ondelete="CASCADE"), nullable=False)
+    people = relationship("DbPersonJob",back_populates="job_title")
+
+class DbPersonJob(Base):
+    __tablename__= 'person_job_title'
+    id = Column(Integer, primary_key=True, index=True)
+    person_id = Column(Integer, ForeignKey(
+        "person.id", ondelete="CASCADE"), nullable=False)
+    title_id = Column(Integer, ForeignKey(
+        "job_title.id", ondelete="CASCADE"), nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True),
+                        server_default=text('now()'), nullable=False)
+    updated_at = Column(TIMESTAMP(timezone=True),
+                        onupdate=func.current_timestamp(), nullable=True)
+    person = relationship("DbPerson", back_populates='job_titles')
+    job_title = relationship("DbJobTitle", back_populates='people')
+

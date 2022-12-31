@@ -3,6 +3,9 @@ from schemas import user_schemas, personalized_enums
 from .models import DbUser
 from utilities import hash_manager
 
+# TODO: add verification for the email -- unique
+# add the other methods...
+
 
 def create_user(request: user_schemas.UserBase, db: Session):
     hashed_password = hash_manager.hash_pass(request.password)

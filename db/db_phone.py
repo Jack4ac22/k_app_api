@@ -51,13 +51,12 @@ def create_phone(request: phone_schemas.PhoneBase, db: Session):
 
 
 def get_all(db: Session):
-    phones = db.query(DbPhone).all()
-    return phones
+    return db.query(DbPhone).all()
 
 
 def get_by_id(id: int, db: Session):
     phone = check_id(id, db)
-    return phone
+    return phone.first()
 
 
 def get_by_number(nb: int, db: Session):
