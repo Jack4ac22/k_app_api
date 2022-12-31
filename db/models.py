@@ -1,7 +1,6 @@
 from schemas import personalized_enums
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Enum, Float, Date, DateTime, TEXT
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.sql.expression import text
@@ -67,20 +66,21 @@ class DbComment(Base):
     created_at = Column(TIMESTAMP(timezone=True),
                         server_default=text('now()'), nullable=False)
     updated_at = Column(TIMESTAMP(timezone=True),
-                        onupdate=func.current_timestamp(), nullable=True)
+                        onupdate=text('now()'), nullable=True)
     person = relationship("DbPerson", back_populates='comments')
 
 
 class DbTask(Base):
-    __tablename__ = 'tasks'
+    __tablename__ = 'task'
     id = Column(Integer, primary_key=True, index=True)
     person_id = Column(Integer, ForeignKey(
         "person.id", ondelete="CASCADE"), nullable=False)
-    title = Column(String, nullable=True, unique=False)
-    content = Column(TEXT, nullable=True,
-                     unique=False)
+    title = Column(String, nullable=True)
+    content = Column(TEXT, nullable=True)
+    task_status = Column(Enum(personalized_enums.Task_status),
+                         nullable=False, server_default="task_open")
     created_at = Column(TIMESTAMP(timezone=True),
                         server_default=text('now()'), nullable=False)
-    updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(),
+    updated_at = Column(TIMESTAMP(timezone=True),
                         onupdate=func.current_timestamp(), nullable=True)
     person = relationship("DbPerson", back_populates='tasks')
